@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Todo } from '../../types/Todo';
-import { getTodos } from '../../api';
 
 type Props = {
-  setTodos: (todos: Todo[]) => void;
+  setFilterTodos: (todos: Todo[]) => void;
+  todos: Todo[];
 };
 
 enum StatusSelect {
@@ -12,53 +12,50 @@ enum StatusSelect {
   completed = 'completed',
 }
 
-export const TodoFilter: React.FC<Props> = ({ setTodos }) => {
+export const TodoFilter: React.FC<Props> = ({
+  setFilterTodos: setTodos,
+  todos,
+}) => {
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState(`${StatusSelect.all}`);
 
   useEffect(() => {
     if (selected === StatusSelect.all) {
-      getTodos().then(todos => {
-        const filterTodos: Todo[] = todos.filter(todo => {
-          if (value) {
-            return todo.title.toLowerCase().includes(value.toLowerCase());
-          }
+      const filterTodos: Todo[] = todos.filter(todo => {
+        if (value) {
+          return todo.title.toLowerCase().includes(value.toLowerCase());
+        }
 
-          return true;
-        });
-
-        setTodos(filterTodos);
+        return true;
       });
+
+      setTodos(filterTodos);
     } else if (selected === StatusSelect.active) {
-      getTodos().then(todos => {
-        const filterTodos: Todo[] = todos.filter(todo => {
-          if (value) {
-            return (
-              todo.completed === false &&
-              todo.title.toLowerCase().includes(value.toLowerCase())
-            );
-          }
+      const filterTodos: Todo[] = todos.filter(todo => {
+        if (value) {
+          return (
+            todo.completed === false &&
+            todo.title.toLowerCase().includes(value.toLowerCase())
+          );
+        }
 
-          return todo.completed === false;
-        });
-
-        setTodos(filterTodos);
+        return todo.completed === false;
       });
+
+      setTodos(filterTodos);
     } else if (selected === StatusSelect.completed) {
-      getTodos().then(todos => {
-        const filterTodos: Todo[] = todos.filter(todo => {
-          if (value) {
-            return (
-              todo.completed === true &&
-              todo.title.toLowerCase().includes(value.toLowerCase())
-            );
-          }
+      const filterTodos: Todo[] = todos.filter(todo => {
+        if (value) {
+          return (
+            todo.completed === true &&
+            todo.title.toLowerCase().includes(value.toLowerCase())
+          );
+        }
 
-          return todo.completed === true;
-        });
-
-        setTodos(filterTodos);
+        return todo.completed === true;
       });
+
+      setTodos(filterTodos);
     }
   }, [value, selected]);
 

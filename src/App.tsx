@@ -12,11 +12,13 @@ import { getTodos } from './api';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filterTodos, setFilterTodos] = useState<Todo[]>([]);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
 
   useEffect(() => {
     getTodos().then(allTodos => {
       setTodos(allTodos);
+      setFilterTodos(allTodos);
     });
   }, []);
 
@@ -28,13 +30,16 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter setTodos={(prev: Todo[]) => setTodos(prev)} />
+              <TodoFilter
+                setFilterTodos={(prev: Todo[]) => setFilterTodos(prev)}
+                todos={todos}
+              />
             </div>
 
             <div className="block">
-              {todos.length > 0 ? (
+              {filterTodos.length > 0 ? (
                 <TodoList
-                  todos={todos}
+                  todos={filterTodos}
                   setSelectedTodo={prev => setSelectedTodo(prev)}
                   selectedTodo={selectedTodo}
                 />

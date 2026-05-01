@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loader } from '../Loader';
 import { User } from '../../types/User';
 import { getUser } from '../../api';
@@ -15,9 +15,11 @@ export const TodoModal: React.FC<Props> = ({
 }) => {
   const [user, setUser] = useState<User>();
 
-  getUser(selectedTodo.userId).then((newUser: User) => {
-    setUser(newUser);
-  });
+  useEffect(() => {
+    getUser(selectedTodo.userId).then((newUser: User) => {
+      setUser(newUser);
+    });
+  }, [selectedTodo]);
 
   return (
     <div className="modal is-active" data-cy="modal">
