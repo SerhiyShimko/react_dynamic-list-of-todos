@@ -14,11 +14,13 @@ export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filterTodos, setFilterTodos] = useState<Todo[]>([]);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+  const [loading, isLoading] = useState(true);
 
   useEffect(() => {
     getTodos().then(allTodos => {
       setTodos(allTodos);
       setFilterTodos(allTodos);
+      isLoading(false);
     });
   }, []);
 
@@ -37,7 +39,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {filterTodos.length > 0 ? (
+              {!loading ? (
                 <TodoList
                   todos={filterTodos}
                   setSelectedTodo={prev => setSelectedTodo(prev)}
